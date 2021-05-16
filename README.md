@@ -15,6 +15,9 @@ fn program() -> int {
 ```
 
  - Main function of the language is `program`, not `main` or `_start`
+ - Default file extension id `.ng`
+
+![Main Image](Image/Main_01.png)
 
 ## Required Platform/Tool(s)
 
@@ -50,6 +53,8 @@ Location: `Project/Export/nano_g`
 
 **[file]**
  - Name of the Input file
+
+![Language Source, Assembly Code, Binary Code](Image/Main_2.png)
 
 ## License
 
