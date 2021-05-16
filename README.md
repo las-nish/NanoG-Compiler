@@ -2,6 +2,8 @@
 
  - NanoG Compiler is a Nano sized compiler written C Language
  - This compiler can translate NanoG source into a pure-readable NASM 64bit Linux assembly
+ - This is not a fully completed language
+ - And no Documents
 
 ```ng
 fn program() -> int {
