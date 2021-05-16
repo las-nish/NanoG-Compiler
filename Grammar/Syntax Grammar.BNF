@@ -1,0 +1,123 @@
+# syntax grammar for nano_g language v1.0.0 compiler
+# written by lasan nishshanka (@las_nish)
+# private version
+# may 12, 2021 & 09:04 p.m.
+# starting symbol is "program"
+
+# note:
+# default sizes for all data types are in 64bit
+# all data types are signed only
+
+program = program_body*
+
+program_body = asm_decl | link_decl | fn_decl | var_decl
+
+# inline assembly declaration
+
+asm_decl = 'asm' asm_data_init '=' asm_end
+
+asm_data_init = ':' identifier ( ',' identifier )*
+
+asm_end = '[' asm_body ']'
+
+asm_body = asm_body_item ( ',' asm_body_item )*
+
+asm_body_item = asm_item ( '+' asm_item )*
+
+asm_item = char_string_literal | identifier
+
+# link declaration
+
+link_decl = 'link' identifier ';'
+
+# fnuction declaration
+
+fn_decl = fn_start fn_end
+
+fn_start = 'fn' identifier
+
+fn_param = '(' param_item_list ')'
+
+param_item_list = param_item ( ',' param_item )*
+
+param_item = var_start
+
+fn_type = '->' data type
+
+fn_end = ';' | fn_param fn_type? block
+
+block = '{' block_body '}'
+
+block_body = block_item*
+
+block_item = asm_decl | var_decl | stmt
+
+# variable declaration
+
+var_decl = var_start '=' var_end
+
+var_start = data_type identifier
+
+var_end = literal ';'
+
+# statement
+
+stmt = if_stmt | while_stmt | break_stmt | place_stmt | goto_stmt | return_stmt | expr_stmt
+
+if_stmt = 'if' cond_expr block ( 'else' block )?
+
+while_stmt = 'while' cond_expr block
+
+break_stmt = 'break' ';'
+
+place_stmt = 'place' identifier ':'
+
+goto_stmt = 'goto' identifier ';'
+
+return_stmt = 'return' expr? ';'
+
+expr_stmt = expr ';'
+
+# expression
+
+expr_list = expr ( ',' expr )*
+
+expr = assignment_expr
+
+assignment_expr = cond_expr ( ( '=' | '+=' | '-=' | '*=' | '/=' | '%=' | '<<=' | '>>=' | '&=' | '^=' | '|=' ) assignment_expr )?
+
+cond_expr = logical_or_expr
+
+logical_or_expr = logical_and_expr ( '||' logical_or_expr )?
+
+logical_and_expr = inclusive_or_expr ( '&&' logical_and_expr )?
+
+inclusive_or_expr = exclusive_or_expr ( '|' inclusive_or_expr )?
+
+exclusive_or_expr = and_expr ( '^' exclusive_or_expr )?
+
+and_expr = equality_expr ( '&' and_expr )?
+
+equality_expr = relational_expr ( ( '==' | '!=' ) equality_expr )?
+
+relational_expr = shift_expr ( ( '<' | '>' | '<=' | '>=' ) relational_expr )?
+
+shift_expr = addictive_expr ( ( '<<' | '>>' ) shift_expr )?
+
+addictive_expr = multiplicative_expr ( ( '+' | '-' ) addictive_expr )?
+
+multiplicative_expr = unary_expr ( ( '*' | '/' | '%' ) multiplicative_expr )?
+
+unary_expr = ( 'size' | '+' | '-' | '~' | '!' | '$' ) unary_expr
+           | postfix_expr
+
+postfix_expr = postfix_expr postfix_type | primary_expr
+
+postfix_type = '++' | '--'
+             | '(' expr_list? ')'       # function call
+
+primary_expr = identifier | literal | '(' expression ')'
+
+# short code
+
+data_type = 'int' | 'char' | 'string'

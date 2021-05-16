@@ -1,0 +1,25 @@
+# sample source file
+# nano_g compiler
+
+import `Test/Assembly Test/Test 01/test_01.ng.asm`
+
+fn program(int a, int b) {
+  int a = 10;
+  int b = 20;
+
+  char c = 'a';
+  char d = 'B';
+
+  string e = "Lasan";
+  string f = "NanoG";
+
+  if 10 <= 5 {
+    int a = 50;
+  } else {
+    int a = 50;
+  }
+
+  while 10 == 10 {
+    return 10;
+  }
+}

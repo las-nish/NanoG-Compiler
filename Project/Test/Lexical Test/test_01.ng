@@ -1,0 +1,160 @@
+# lexical analyzer testing file
+# only single line comments are available
+# may 13, 2021 & 12:45 a.m.
+
+# special symbol
+
+(
+)
+{
+}
+[
+]
+:
+;
+.
+,
+->
+$
+
+# operator(s)
+
++
+-
+*
+/
+%
+++
+--
+==
+!=
+<
+>
+<=
+>=
+&&
+||
+!
+&
+|
+^
+~
+<<
+>>
+=
++=
+-=
+*=
+/=
+%=
+<<=
+>>=
+&=
+^=
+|=
+
+# hexadecimal integer literal
+
+0xFFA
+0xAFF5698
+0X255
+0x10
+
+# octal integer literal
+
+0o455
+0O12
+0o6564
+0O12
+
+# binary integer literals
+
+0B1001
+0b1____10___
+0B000110011_10011
+
+# integer literals
+
+100
+1520
+0432
+2575337
+0764998425
+4916
+
+1_______2
+
+# keyword
+
+asm
+char
+else
+empty
+fn
+goto
+if
+int
+import
+link
+place
+return
+struct
+size
+string
+while
+zero
+
+# identifier
+
+identifier
+_identifier
+identifier1234
+_identifier1234
+
+# string literal
+
+"Hello World !\n"
+"Lasan Nishshanka\n\e[31m\nGaweshani\n\e[33mbooo\e[0m\n"
+"a"
+"z"
+"~"
+
+"Lasan"
+
+"L\_
+a\_
+s\_
+a\_
+n\_
+"
+
+# character literal
+
+'a'
+'z'
+'A'
+'Z'
+'1'
+'0'
+'!'
+'~'
+'\a'
+'\b'
+'\s'
+'\f'
+'\n'
+'\r'
+'\t'
+'\v'
+'\e'
+'\"'
+'\''
+'\\'
+'\?'
+'\0'
+
+# character string literal
+
+`Lasan Nishshanka`
+`Gaweshani Rajapakshe`
+`Udumbara`

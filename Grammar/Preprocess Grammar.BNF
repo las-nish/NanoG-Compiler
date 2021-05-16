@@ -1,0 +1,88 @@
+# preprocessor grammar for nano_g language v1.0.0 compiler
+# written by lasan nishshanka (@las_nish)
+# private version
+# may 12, 2021 & 09:04 p.m.
+
+preprocessor = p_import |  | p_define | p_undefine | p_line | p_error | p_warning | p_if | p_null
+
+# import preprocessor
+
+p_import = line_start 'import' import_end new_line
+
+import_end = '"' import_path '"'
+
+import_path = import_path_item*
+
+import_path_item = ~[ 'U+0022' 'U+002A' 'U+003F' 'U+003A' 'U+003C' 'U+003E' 'U+007C' 'U+000A' ]
+
+# define preprocessor
+
+p_define = line_start '@' 'define' conditional_symbol p_define_body? new_line
+
+p_define_body = ~[ 'U+000A' ] ( '\_' p_define_body )*
+
+# undefine preprocessor
+
+p_undefine = line_start '@' 'undefine' conditional_symbol new_line
+
+# line preprocessor
+
+p_line = line_start '@' 'line' p_line_initialize new_line
+
+p_line_initialize = line_string? line_digit* | 'default' | 'zero'
+
+line_digit = [0-9] | '_'
+
+line_string = '\'' line_string_body '\''
+
+line_string_body = line_string_body_item*
+
+line_string_body_item = ~[ 'U+0022' 'U+002A' 'U+003F' 'U+003A' 'U+003C' 'U+003E' 'U+007C' 'U+002F' 'U+005C' 'U+000A' ] # 34 (") 42 (*) 63 (?) 58 (:) 60 (<) 62 (>) 124 (|) 47 (/) 92 (\\) 10
+
+# error preprocessor
+
+p_error = line_start '@' 'error' p_error_body* new_line
+
+p_error_body = ~[ 'U+000A' ]
+
+# warning preprocessor
+
+p_warning = line_start '@' 'warning' p_warning_body* new_line
+
+p_warning_body = ~[ 'U+000A' ]
+
+# if preprocessor
+
+p_if = p_if_start p_else_if* p_else? p_end_if
+
+p_if_start = line_start p_if_start_part p_expr new_line p_conditional_section
+
+p_if_start_part = '@' 'if' | '@' 'if_not'
+
+p_else_if = line_start '@' 'else_if' p_expr new_line p_conditional_section
+
+p_else = line_start '@' 'else' new_line
+
+p_end_if = line_start '@' 'end_if' new_line
+
+p_null = '@'
+
+conditional_symbol = ~[ 'true' 'false'] | Any IDENTIFIER or KEYWORD
+
+# expression
+
+p_expr = p_or_expr
+
+p_or_expr = p_and_expr ( '||' p_or_expr )?
+
+p_and_expr = p_equality_expr ( '&&' p_and_expr )?
+
+p_equality_expr = p_unary_expr ( p_equality_op p_equality_expr )?
+
+p_equality_op = '==' | '!='
+
+p_unary_expr = '!' p_unary_expr | p_primary_expr
+
+p_primary_expr = 'true' | 'false' | conditional_symbol | '(' p_expr ')'
+
+p_conditional_section = input

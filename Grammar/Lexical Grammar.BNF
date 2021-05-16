@@ -1,0 +1,186 @@
+# lexical grammar for nano_g language v1.0.0 compiler
+# written by lasan nishshanka (@las_nish)
+# private version
+# may 12, 2021 & 09:04 p.m.
+# starting symbol is "input"
+
+input = section*
+
+section = section_part*
+
+section_part = element* new_line | preprocessor
+
+element = whitespace | comment | token
+
+input_character = ~[ '\r' '\n' '\u0085' '\u2028' '\u2029' ]
+
+new_line = '\u000D' # '<Carriage Return CHARACTER (U+000D)>'
+         | '\u000A' # '<Line Feed CHARACTER (U+000A)>'
+         | '\u0085' # '<Next Line CHARACTER (U+0085)>'
+         | '\u2028' # '<Line Separator CHARACTER (U+2028)>'
+         | '\u2029' # '<Paragraph Separator CHARACTER (U+2029)>'
+
+whitespace = '\u0009'       # '<Horizontal Tab Character (U+0009)>'
+           | '\u000B'       # '<Vertical Tab Character (U+000B)>'
+           | '\u000C'       # '<Form Feed Character (U+000C)>'
+           | UnicodeClassZS # '<Any Character With Unicode Class Zs>'
+           | new_line
+
+UnicodeClassZS = '\u0020' # SPACE
+               | '\u00A0' # NO_BREAK SPACE
+               | '\u1680' # OGHAM SPACE MARK
+               | '\u180E' # MONGOLIAN VOWEL SEPARATOR
+               | '\u2000' # EN QUAD
+               | '\u2001' # EM QUAD
+               | '\u2002' # EN SPACE
+               | '\u2003' # EM SPACE
+               | '\u2004' # THREE_PER_EM SPACE
+               | '\u2005' # FOUR_PER_EM SPACE
+               | '\u2006' # SIX_PER_EM SPACE
+               | '\u2008' # PUNCTUATION SPACE
+               | '\u2009' # THIN SPACE
+               | '\u200A' # HAIR SPACE
+               | '\u202F' # NARROW NO_BREAK SPACE
+               | '\u3000' # IDEOGRAPHIC SPACE
+               | '\u205F' # MEDIUM MATHEMATICAL SPACE
+
+# comment
+
+comment = '#' input_character*
+
+token = identifier | keyword | symbol | operator | literal
+
+# identifier
+
+identifier = identifier_start identifier_part
+
+identifier_start = alpha | '_'
+
+alpha = [a-zA-Z]
+
+identifier_part = alpha | digit | '_'
+
+# keyword
+
+keyword = 'asm'       : k_asm
+        | 'char'      : k_char
+        | 'else'      : k_else
+        | 'empty'     : k_empty
+        | 'fn'        : k_fn
+        | 'goto'      : k_goto
+        | 'if'        : k_if
+        | 'int'       : k_int
+        | 'import'    : k_import
+        | 'link'      : k_link
+        | 'place'     : k_place
+        | 'return'    : k_return
+        | 'struct'    : k_struct
+        | 'size'      : k_size
+        | 'string'    : k_string
+        | 'while'     : k_while
+        | 'zero'      : k_zero
+
+# symbol
+
+symbol = '('        : s_lprn
+       | ')'        : s_rprn
+       | '{'        : s_lcbrk
+       | '}'        : s_rcbrk
+       | '['        : s_lbrk
+       | ']'        : s_rbrk
+       | ':'        : s_col
+       | ';'        : s_scol
+       | '.'        : s_dot
+       | ','        : s_com
+       | '->'       : s_arow
+       | '$'        : s_dolar
+
+# operator
+
+operator = '+'     : o_plus
+         | '-'     : o_minus
+         | '*'     : o_multi
+         | '/'     : o_divis
+         | '%'     : o_modulus
+         | '++'    : o_incr
+         | '--'    : o_decr
+         | '=='    : o_eqto
+         | '!='    : o_noteq
+         | '<'     : o_les
+         | '>'     : o_great
+         | '<='    : o_leseq
+         | '>='    : o_greateq
+         | '&&'    : o_and
+         | '||'    : o_or
+         | '!'     : o_not
+         | '&'     : o_bitand
+         | '|'     : o_inor
+         | '^'     : o_xor
+         | '~'     : o_unary
+         | '<<'    : o_lshift
+         | '>>'    : o_rshift
+         | '='     : o_eq
+         | '+='    : o_pluseq
+         | '-='    : o_minuseq
+         | '*='    : o_multieq
+         | '/='    : o_diviseq
+         | '%='    : o_moduluseq
+         | '<<='   : o_lshifteq
+         | '>>='   : o_rshifteq
+         | '&='    : o_bitandeq
+         | '^='    : o_xoreq
+         | '|='    : o_inoreq
+
+literal = integer_literal | character_literal | string_literal | char_string_literal | boolean_literal | empty_literal | zero_literal
+
+# integer literal
+
+integer_literal = decimal_integer | hexadecimal_integer | octal_integer | binary_integer
+
+decimal_integer = ( digit | '_' )+
+
+digit = [0-9]
+
+hexadecimal_integer = '0' ( 'x' | 'X' ) ( hex_digit )+
+
+hex_digit = [a-fA-F0-9]
+
+octal_integer = '0' ( 'o' | 'O' ) ( octal_digit )+
+
+octal_digit = [0-7]
+
+binary_integer = '0' ( 'b' | 'B' ) ( binary_digit | '_' )+
+
+binary_digit = '0' | '1'
+
+# character literal
+
+character_literal = '\'' character_body '\''
+
+character_body = ~[ '\r' '\n' '\u0085' '\u2028' '\u2029' ] | common_character
+
+common_character = simple_escape
+
+simple_escape = '\_' | '\a' | '\b' | '\s' | '\f' | '\n'
+              | '\r' | '\t' | '\v' | '\e' | '\"' | '\''
+              | '\\' | '\?' | '\0'
+
+# string Literal
+
+string_literal = '\"' string_body '\"'
+
+string_body = character_body*
+
+# character string literal
+
+char_string_literal = '`' character_string_body '`'
+
+character_string_body = ~[ '\r' '\n' '\u0085' '\u2028' '\u2029' ]
+
+# empty literal
+
+empty_literal = 'empty'
+
+# zero literal
+
+zero_literal = 'zero'
