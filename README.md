@@ -1,3 +1,7 @@
+```
+Update: There are a lot of memory leaks in this project!
+```
+
 # NanoG Compiler (Educational)
 
  - NanoG Compiler is a toy compiler written C Language
