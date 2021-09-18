@@ -1,5 +1,6 @@
 ```
-Update: There are a lot of memory leaks in this project!
+Update 01: There are a lot of memory leaks in this project!
+Update 02: No Future Updates and Project is Closed
 ```
 
 # NanoG Compiler (Educational)
